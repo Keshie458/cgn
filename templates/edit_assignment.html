@@ -1,0 +1,35 @@
+<h2>Edit Asset Assignment</h2>
+<form method="POST">
+    <label>Asset:</label><br>
+    <select name="asset_id">
+        {% for asset in assets %}
+            <option value="{{ asset.id }}" {% if asset.id == assignment.asset_id %}selected{% endif %}>
+                {{ asset.name }} ({{ asset.serial_number }})
+            </option>
+        {% endfor %}
+    </select><br>
+
+    <label>User:</label><br>
+    <select name="user_id">
+        {% for user in users %}
+            <option value="{{ user.id }}" {% if user.id == assignment.user_id %}selected{% endif %}>
+                {{ user.username }}
+            </option>
+        {% endfor %}
+    </select><br>
+
+    <label>Date Assigned:</label><br>
+    <input type="date" name="date_assigned" value="{{ assignment.date_assigned }}"><br>
+
+    <label>Return Date:</label><br>
+    <input type="date" name="return_date" value="{{ assignment.return_date }}"><br>
+
+    <label>Status:</label><br>
+    <select name="status">
+        <option {% if assignment.status == 'Active' %}selected{% endif %}>Active</option>
+        <option {% if assignment.status == 'Returned' %}selected{% endif %}>Returned</option>
+        <option {% if assignment.status == 'Lost' %}selected{% endif %}>Lost</option>
+    </select><br>
+
+    <button type="submit">Update Assignment</button>
+</form>

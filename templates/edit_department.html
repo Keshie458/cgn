@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Department</title>
+</head>
+<body>
+    <h2>Edit Department</h2>
+    <form method="POST">
+        <label>Name:</label><br>
+        <input type="text" name="name" value="{{ department.name }}" required><br>
+        <label>Description:</label><br>
+        <textarea name="description">{{ department.description }}</textarea><br>
+        <button type="submit">Update Department</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit User</title>
+</head>
+<body>
+    <h2>Edit User</h2>
+    <form method="POST">
+        <label>Username:</label><br>
+        <input type="text" name="username" value="{{ user.username }}" required><br>
+
+        <label>Password:</label><br>
+        <input type="password"  required><br>
+
+        <label>Role:</label><br>
+        <select name="role" required>
+            <option value="Admin" {% if user.role == 'Admin' %}selected{% endif %}>Admin</option>
+            <option value="Staff" {% if user.role == 'Staff' %}selected{% endif %}>Staff</option>
+        </select><br>
+
+        <label>Department:</label><br>
+        <select name="department_id" required>
+            {% for dept in departments %}
+                <option value="{{ dept.id }}" {% if dept.id == user.department_id %}selected{% endif %}>{{ dept.name }}</option>
+            {% endfor %}
+        </select><br>
+
+        <button type="submit">Update</button>
+    </form>
+</body>
+</html>

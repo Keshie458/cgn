@@ -1,0 +1,50 @@
+<h2>Log Maintenance</h2>
+<form method="POST">
+    <label>Asset:</label><br>
+    <select name="asset_id">
+        {% for asset in assets %}
+            <option value="{{ asset.id }}">{{ asset.name }} ({{ asset.serial_number }})</option>
+        {% endfor %}
+    </select><br>
+
+    <label>Date:</label><br>
+    <input type="date" name="date" required><br>
+
+    <label>Description:</label><br>
+    <textarea name="description"></textarea><br>
+
+    <label>Cost:</label><br>
+    <input type="number" step="0.01" name="cost"><br>
+
+    <label>Service Provider:</label><br>
+    <input type="text" name="service_provider"><br>
+
+    <label>Status:</label><br>
+    <select name="status">
+        <option>Scheduled</option>
+        <option>Completed</option>
+        <option>Pending</option>
+    </select><br>
+
+    <button type="submit">Add Log</button>
+</form>
+
+<h3>Maintenance History</h3>
+<table border="1">
+    <tr><th>Asset</th><th>Date</th><th>Description</th><th>Cost</th><th>Status</th></tr>
+    {% for log in logs %}
+    <tr>
+        <td>{{ log.asset.name }}</td>
+        <td>{{ log.date }}</td>
+        <td>{{ log.description }}</td>
+        <td>{{ log.cost }}</td>
+        <td>{{ log.status }}</td>
+        <td>
+    <a href="{{ url_for('maintenance.edit_maintenance', id=log.id) }}">Edit</a>
+    <form method="POST" action="{{ url_for('maintenance.delete_maintenance', id=log.id) }}" style="display:inline;">
+        <button type="submit" onclick="return confirm('Delete this maintenance log?')">Delete</button>
+    </form>
+</td>
+    </tr>
+    {% endfor %}
+</table>

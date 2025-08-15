@@ -1,0 +1,18 @@
+<h2>Dispose Asset: {{ asset.name }}</h2>
+<form method="POST">
+    <label>Disposal Date:</label><br>
+    <input type="date" name="disposal_date" required><br>
+
+    <label>Disposal Method:</label><br>
+    <select name="disposal_method">
+        <option>Sold</option>
+        <option>Donated</option>
+        <option>Scrapped</option>
+        <option>Written Off</option>
+    </select><br>
+
+    <label>Reason:</label><br>
+    <textarea name="disposal_reason" required></textarea><br>
+
+    <button type="submit">Confirm Disposal</button>
+</form>

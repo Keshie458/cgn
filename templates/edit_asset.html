@@ -1,0 +1,47 @@
+<h2>Edit Asset</h2>
+<form method="POST">
+    <label>Name:</label><br>
+    <input type="text" name="name" value="{{ asset.name }}" required><br>
+
+    <label>Description:</label><br>
+    <textarea name="description">{{ asset.description }}</textarea><br>
+
+    <label>Serial Number:</label><br>
+    <input type="text" name="serial_number" value="{{ asset.serial_number }}" required><br>
+
+    <label>Status:</label><br>
+    <select name="status">
+        <option {% if asset.status == 'In Use' %}selected{% endif %}>In Use</option>
+        <option {% if asset.status == 'Under Repair' %}selected{% endif %}>Under Repair</option>
+        <option {% if asset.status == 'Disposed' %}selected{% endif %}>Disposed</option>
+    </select><br>
+
+    <label>Purchase Date:</label><br>
+    <input type="date" name="purchase_date" value="{{ asset.purchase_date }}"><br>
+
+    <label>Warranty Expiry:</label><br>
+    <input type="date" name="warranty_expiry" value="{{ asset.warranty_expiry }}"><br>
+
+    <label>Category:</label><br>
+    <select name="category_id">
+        {% for cat in categories %}
+            <option value="{{ cat.id }}" {% if cat.id == asset.category_id %}selected{% endif %}>{{ cat.name }}</option>
+        {% endfor %}
+    </select><br>
+
+    <label>Department:</label><br>
+    <select name="department_id">
+        {% for dept in departments %}
+            <option value="{{ dept.id }}" {% if dept.id == asset.department_id %}selected{% endif %}>{{ dept.name }}</option>
+        {% endfor %}
+    </select><br>
+
+    <label>Location:</label><br>
+    <select name="location_id">
+        {% for loc in locations %}
+            <option value="{{ loc.id }}" {% if loc.id == asset.location_id %}selected{% endif %}>{{ loc.name }}</option>
+        {% endfor %}
+    </select><br>
+
+    <button type="submit">Update Asset</button>
+</form>

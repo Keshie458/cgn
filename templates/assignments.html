@@ -1,0 +1,93 @@
+<h2>Assign Asset</h2>
+<form method="POST">
+    <label>Asset:</label><br>
+    <select name="asset_id">
+        {% for asset in assets %}
+            <option value="{{ asset.id }}">{{ asset.name }} ({{ asset.serial_number }})</option>
+        {% endfor %}
+    </select><br>
+
+    <label>User:</label><br>
+    <select name="user_id">
+        {% for user in users %}
+            <option value="{{ user.id }}">{{ user.username }}</option>
+        {% endfor %}
+    </select><br>
+
+    <label>Date Assigned:</label><br>
+    <input type="date" name="date_assigned" required><br>
+
+    <label>Return Date:</label><br>
+    <input type="date" name="return_date"><br>
+
+    <label>Status:</label><br>
+    <select name="status">
+        <option>Active</option>
+        <option>Returned</option>
+        <option>Lost</option>
+    </select><br>
+
+    <button type="submit">Assign</button>
+</form>
+
+<h3>Current Assignments</h3>
+<form method="GET">
+    <select name="department_id">
+        <option value="">All Departments</option>
+        {% for dept in departments %}
+            <option value="{{ dept.id }}" {% if dept.id|string == selected_dept %}selected{% endif %}>{{ dept.name }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="status">
+        <option value="">All Statuses</option>
+        <option value="Active" {% if selected_status == 'Active' %}selected{% endif %}>Active</option>
+        <option value="Returned" {% if selected_status == 'Returned' %}selected{% endif %}>Returned</option>
+        <option value="Lost" {% if selected_status == 'Lost' %}selected{% endif %}>Lost</option>
+    </select>
+
+    <button type="submit">Filter</button>
+</form>
+<h3>Filter Assignments</h3>
+<form method="GET">
+    <label>Department:</label>
+    <select name="department_id">
+        <option value="">All Departments</option>
+        {% for dept in departments %}
+            <option value="{{ dept.id }}" {% if dept.id|string == selected_dept %}selected{% endif %}>{{ dept.name }}</option>
+        {% endfor %}
+    </select>
+
+    <label>Status:</label>
+    <select name="status">
+        <option value="">All Statuses</option>
+        <option value="Active" {% if selected_status == 'Active' %}selected{% endif %}>Active</option>
+        <option value="Returned" {% if selected_status == 'Returned' %}selected{% endif %}>Returned</option>
+        <option value="Lost" {% if selected_status == 'Lost' %}selected{% endif %}>Lost</option>
+    </select>
+
+    <button type="submit">Apply Filters</button>
+</form>
+
+<table border="1">
+    <tr><th>Asset</th><th>User</th><th>Date Assigned</th><th>Asset Status</th><th>Department</th><th>Actions</th></tr>
+    {% for a in assignments %}
+    <tr>
+        <td>{{ a.asset.name }}</td>
+        <td>{{ a.user.username }}</td>
+        <td>{{ a.date_assigned }}</td>
+        <td>{{ a.asset.status }}</td>
+        <td>{{ a.user.department.name if a.user.department else 'None' }}</td>
+        <td>
+    {% if current_user.role == 'Admin' %}
+        <a href="{{ url_for('assignments.edit_assignment', id=a.id) }}">Edit</a>
+
+        <form method="POST" action="{{ url_for('assignments.delete_assignment', id=a.id) }}" style="display:inline;">
+            <button type="submit" onclick="return confirm('Are you sure you want to delete this assignment?')">Delete</button>
+        </form>
+    {% endif %}
+</td>
+        
+    </tr>
+    {% endfor %}
+</table>

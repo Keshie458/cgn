@@ -1,0 +1,12 @@
+<h2>Maintenance History for {{ asset.name }}</h2>
+<table border="1">
+    <tr><th>Date</th><th>Description</th><th>Cost</th><th>Status</th></tr>
+    {% for log in logs %}
+    <tr>
+        <td>{{ log.date }}</td>
+        <td>{{ log.description }}</td>
+        <td>{{ log.cost }}</td>
+        <td>{{ log.status }}</td>
+    </tr>
+    {% endfor %}
+</table>

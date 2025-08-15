@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Users{% endblock %}
+
+{% block content %}
+<h2>Manage Users</h2>
+
+    <h2>Add User</h2>
+    
+    <form method="POST">
+        <label>Username:</label><br>
+        <input type="text" name="username" required><br>
+
+        <label>Password:</label><br>
+        <input type="password" name="password" required><br>
+
+        <label>Role:</label><br>
+        <select name="role" required>
+            <option value="admin">Admin</option>
+        </select><br>
+
+        <label>Department:</label><br>
+        <select name="department_id" required>
+            {% for dept in departments %}
+                <option value="{{ dept.id }}">{{ dept.name }}</option>
+            {% endfor %}
+        </select><br>
+
+        <button type="submit">Create User</button>
+    </form>
+
+    <h3>Registered Users</h3>
+    <form method="GET">
+    <input type="text" name="search" placeholder="Search username" value="{{ search or '' }}">
+
+    <select name="role">
+        <option value="">All Roles</option>
+        <option value="Admin" {% if role_filter == 'Admin' %}selected{% endif %}>Admin</option>
+        <option value="Staff" {% if role_filter == 'Staff' %}selected{% endif %}>Staff</option>
+    </select>
+
+    <select name="department_id">
+        <option value="">All Departments</option>
+        {% for dept in departments %}
+            <option value="{{ dept.id }}" {% if dept_filter == dept.id|string %}selected{% endif %}>{{ dept.name }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Filter</button>
+</form>
+    <table border="1">
+        <tr>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Department</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.role }}</td>
+            <td>{{ user.department.name if user.department else 'None' }}</td>
+            <td>
+   {% if current_user.role == 'Admin' %}
+    <a href="{{ url_for('users.edit_user', id=user.id) }}">Edit</a>
+
+    <form method="POST" action="{{ url_for('users.delete_user', id=user.id) }}" style="display:inline;">
+        <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
+    </form>
+{% endif %}
+</td>
+
+        </tr>
+        {% endfor %}
+    </table>
+
+
+
+{% endblock %}

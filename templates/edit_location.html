@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Location</title>
+</head>
+<body>
+    <h2>Edit Location</h2>
+    <form method="POST">
+        <label>Name:</label><br>
+        <input type="text" name="name" value="{{ location.name }}" required><br>
+
+        <label>Description:</label><br>
+        <textarea name="description">{{ location.description }}</textarea><br>
+
+        <button type="submit">Update</button>
+    </form>
+</body>
+</html>

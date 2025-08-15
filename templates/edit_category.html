@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Category</title>
+</head>
+<body>
+    <h2>Edit Asset Category</h2>
+    <form method="POST">
+        <label>Name:</label><br>
+        <input type="text" name="name" value="{{ category.name }}" required><br>
+
+        <label>Description:</label><br>
+        <textarea name="description">{{ category.description }}</textarea><br>
+
+        <button type="submit">Update</button>
+    </form>
+</body>
+</html>

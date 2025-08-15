@@ -1,0 +1,23 @@
+<h2>Create New User</h2>
+<form method="POST">
+    <label>Username:</label><br>
+    <input type="text" name="username" required><br>
+
+    <label>Password:</label><br>
+    <input type="password" name="password" required><br>
+
+    <label>Role:</label><br>
+    <select name="role">
+        <option value="Admin">Admin</option>
+        <option value="Staff">Staff</option>
+    </select><br>
+
+    <label>Department:</label><br>
+    <select name="department_id">
+        {% for dept in departments %}
+            <option value="{{ dept.id }}">{{ dept.name }}</option>
+        {% endfor %}
+    </select><br>
+
+    <button type="submit">Create User</button>
+</form>

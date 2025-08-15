@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Departments</title>
+</head>
+<body>
+    <h2>Add Department</h2>
+    <form method="POST">
+        <label>Name:</label><br>
+        <input type="text" name="name" required><br>
+        <label>Description:</label><br>
+        <textarea name="description"></textarea><br>
+        <button type="submit">Add Department</button>
+    </form>
+    <form method="GET">
+        <input type="text" name="search" placeholder="Search departments..." value="{{ search_query }}">
+        <button type="submit">Search</button>
+    </form>
+
+    <h3>Existing Departments</h3>
+    <a href="/departments/export/csv">📥 Export as CSV</a>
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+        {% for dept in departments %}
+        <tr>
+            <td>{{ dept.name }}</td>
+            <td>{{ dept.description }}</td>
+            <td>
+    <form action="/departments/delete/{{ dept.id }}" method="POST" style="display:inline;">
+        <button type="submit">Delete</button>
+    </form>
+    <a href="/departments/edit/{{ dept.id }}">Edit</a>
+</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Users{% endblock %}
+
+{% block content %}
+
+<h2>Add Asset</h2>
+<form method="POST">
+    <label>Name:</label><br>
+    <input type="text" name="name" required><br>
+
+    <label>Description:</label><br>
+    <textarea name="description"></textarea><br>
+
+    <label>Serial Number:</label><br>
+    <input type="text" name="serial_number" required><br>
+
+    <label>Status:</label><br>
+    <select name="status">
+        <option>In Use</option>
+        <option>Under Repair</option>
+        <option>Disposed</option>
+    </select><br>
+
+    <label>Category:</label><br>
+    <select name="category_id" required>
+        {% for cat in categories %}
+            <option value="{{ cat.id }}">{{ cat.name }}</option>
+        {% endfor %}
+    </select><br>
+
+    <label>Department:</label><br>
+    <select name="department_id">
+        {% for dept in departments %}
+            <option value="{{ dept.id }}">{{ dept.name }}</option>
+        {% endfor %}
+    </select><br>
+
+    <label>Location:</label><br>
+    <select name="location_id">
+        {% for loc in locations %}
+            <option value="{{ loc.id }}">{{ loc.name }}</option>
+        {% endfor %}
+    </select><br>
+    <label>Purchase Date:</label><br>
+       <input type="date" name="purchase_date"><br>
+
+    <label>Warranty Expiry:</label><br>
+       <input type="date" name="warranty_expiry"><br>
+
+    <button type="submit">Add Asset</button>
+</form>
+
+
+<table border="1">
+    <tr><th>Name</th><th>Serial</th><th>Category</th><th>Status</th></tr>
+    {% for a in assets %}
+    <h3>All Assets</h3>
+
+<h3>Filter Assets</h3>
+<form method="GET">
+    <label>Status:</label>
+    <select name="status">
+        <option value="">-- All --</option>
+        <option value="In Use">In Use</option>
+        <option value="Under Repair">Under Repair</option>
+        <option value="Disposed">Disposed</option>
+    </select>
+
+    <label>Category:</label>
+    <select name="category_id">
+        <option value="">-- All --</option>
+        {% for cat in categories %}
+            <option value="{{ cat.id }}">{{ cat.name }}</option>
+        {% endfor %}
+    </select>
+
+    <label>Department:</label>
+    <select name="department_id">
+        <option value="">-- All --</option>
+        {% for dept in departments %}
+            <option value="{{ dept.id }}">{{ dept.name }}</option>
+        {% endfor %}
+    </select>
+
+    <label>
+        <input type="checkbox" name="include_disposed" value="1"> Include Disposed
+    </label>
+
+    <button type="submit">Apply Filters</button>
+</form>
+    <tr>
+        <td>{{ a.name }}</td>
+        <td>{{ a.serial_number }}</td>
+        <td>{{ a.category.name }}</td>
+        <td>{{ a.status }}</td>
+        <td><a href="{{ url_for('assets.asset_maintenance', id=a.id) }}">Maintenance</a></td>
+        <td>{% if not a.is_disposed %}
+    <a href="{{ url_for('assets.dispose_asset', id=a.id) }}">Dispose</a>
+{% else %}
+    <span style="color: red;">Disposed</span>
+{% endif %}
+        </td>   
+
+    <a href="/assets/edit/{{ a.id }}">Edit</a>
+    <form method="POST" action="/assets/delete/{{ a.id }}" style="display:inline;">
+        <button type="submit" onclick="return confirm('Are you sure you want to delete this asset?')">Delete</button>
+    </form>
+</td>
+<td><a href="/assets/{{ a.id }}/history">View History</a></td>
+{% set accumulated, book_value = calculate_depreciation(a) %}
+<td>{{ accumulated or '—' }}</td>
+<td>{{ book_value or '—' }}</td>
+
+    </tr>
+    {% endfor %}
+    
+</table>
+{% endblock %}
+

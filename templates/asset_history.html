@@ -1,0 +1,20 @@
+<h2>Assignment History for {{ asset.name }}</h2>
+<table border="1">
+    <tr>
+        <th>User</th><th>Date Assigned</th><th>Return Date</th><th>Status</th><th>Actions</th>
+    </tr>
+    {% for a in assignments %}
+    <tr>
+        <td>{{ a.user.username }}</td>
+        <td>{{ a.date_assigned }}</td>
+        <td>{{ a.return_date or '—' }}</td>
+        <td>{{ a.status }}</td>
+        <td>
+            <a href="/assignments/edit/{{ a.id }}">Edit</a>
+            <form method="POST" action="/assignments/delete/{{ a.id }}" style="display:inline;">
+                <button type="submit" onclick="return confirm('Delete this assignment?')">Delete</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
