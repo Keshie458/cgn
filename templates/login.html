@@ -1,8 +1,31 @@
-<h2>Login</h2>
+<!--<h2>Login</h2>
 <form method="POST">
     <label>Username:</label><br>
     <input type="text" name="username"><br>
     <label>Password:</label><br>
     <input type="password" name="password"><br>
     <button type="submit">Login</button>
-</form>
+</form>-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGN AMS - Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+
+<div class="login-container">
+  <h2>Login</h2>
+  <form method="POST" aria-label="Login form">
+    <label for="username">Username:</label>
+    <input id="username" type="text" name="username" required autocomplete="username" placeholder="Enter your username">
+
+    <label for="password">Password:</label>
+    <input id="password" type="password" name="password" required autocomplete="current-password" placeholder="Enter your password">
+
+    <button type="submit">Login</button>
+  </form>
+  <div class="form-footer">
+    <a href="#">Forgot password?</a>
+  </div>
+</div>
