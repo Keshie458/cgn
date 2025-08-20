@@ -12,10 +12,12 @@ from models import User
 from routes.auth import auth_bp
 from routes.users import users_bp
 from flask_migrate import Migrate
+from datetime import timedelta
 
 app= Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ams.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['PERMANENT_SESSION_LIFETIME']=timedelta(minutes=30)
 
 db.init_app(app)
 login_manager.init_app(app)
