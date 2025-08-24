@@ -1,6 +1,6 @@
-# routes/departments.py
 
-from flask import Blueprint, render_template, request, redirect, url_for
+
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from extensions import db
 from models import Department
 from utils.export import export_departments_csv
@@ -17,10 +17,11 @@ def manage_departments():
             new_department = Department(name=name, description=description)
             db.session.add(new_department)
             db.session.commit()
+            flash('Department added successfully.', 'success')
             return redirect(url_for('departments.manage_departments'))
     search_query = request.args.get('search')
     if search_query:
-        all_departments = Department.query.filter(Department.name.ilike(search_query)).all()
+        departments = Department.query.filter(Department.name.ilike(search_query)).all()
     else:
         departments= Department.query.all()
 
@@ -33,6 +34,7 @@ def edit_department(id):
         department.name = request.form.get('name')
         department.description = request.form.get('description')
         db.session.commit()
+        flash('Department updated successfully.', 'success')
         return redirect(url_for('departments.manage_departments'))
     return render_template('edit_department.html', department=department)
 @departments_bp.route('/departments/delete/<int:id>', methods=['POST'])
@@ -40,6 +42,7 @@ def delete_department(id):
     department = Department.query.get_or_404(id)
     db.session.delete(department)
     db.session.commit()
+    flash('Department deleted successfully.', 'success')
     return redirect(url_for('departments.manage_departments'))
 @departments_bp.route('/departments/export/csv')
 def export_csv():
