@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from extensions import db
 from models import MaintenanceLog, Asset
 from datetime import datetime
@@ -20,6 +20,7 @@ def manage_maintenance():
         )
         db.session.add(log)
         db.session.commit()
+        flash('Maintenance log added successfully!', 'success')
         return redirect(url_for('maintenance.manage_maintenance'))
 
     logs = MaintenanceLog.query.order_by(MaintenanceLog.date.desc()).all()
@@ -37,6 +38,7 @@ def edit_maintenance(id):
         log.service_provider = request.form['service_provider']
         log.status = request.form['status']
         db.session.commit()
+        flash('Maintenance log updated successfully!', 'success')
         return redirect(url_for('maintenance.manage_maintenance'))
 
     return render_template('edit_maintenance.html', log=log, assets=assets)
@@ -47,4 +49,5 @@ def delete_maintenance(id):
     log = MaintenanceLog.query.get_or_404(id)
     db.session.delete(log)
     db.session.commit()
+    flash('Maintenance log deleted successfully!', 'success')
     return redirect(url_for('maintenance.manage_maintenance'))
