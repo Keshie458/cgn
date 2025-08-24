@@ -15,7 +15,8 @@ def create_user():
    departments = Department.query.all()
    if request.method == 'POST':
        new_user = User(
-              username=request.form['username'],
+                username=request.form['username'],
+                full_name=request.form['full_name'],
                 password=generate_password_hash(request.form['password']),
                 role=request.form['role'],
                 department_id=request.form['department_id'])
@@ -30,54 +31,40 @@ def create_user():
 @users_bp.route('/users', methods=['GET', 'POST'])
 @login_required
 def manage_users():
-    if current_user.role != 'Admin':
-        flash('Only admins can manage users.')
-        return redirect(url_for('assets.manage_assets'))
-    departments = Department.query.all()
-   
-   
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']  # For now, we’ll keep it raw (add hashing later)
-        role = request.form['role']
-        department_id = request.form['department_id']
+   if current_user.role != 'Admin':
+       flash('Only admins can manage users.')
+       return redirect(url_for('assets.manage_assets'))
+   departments = Department.query.all()
 
-        hashed_password = generate_password_hash(password)
+   query = User.query
 
-        new_user = User(username=username, password=hashed_password, role=role, department_id=department_id)
-        db.session.add(new_user)
-        db.session.commit()
-        log_action('Created user', target_type='User', target_id=new_user.id)
-        flash('User created successfully!')
-        return redirect(url_for('users.manage_users'))
+   search = request.args.get('search')
+   role_filter = request.args.get('role')
+   dept_filter = request.args.get('department_id')
 
-    query = User.query
+   if search:
+       query = query.filter(User.username.ilike(f'%{search}%'))
+   if role_filter:
+       query = query.filter_by(role=role_filter)
+   if dept_filter:
+       query = query.filter_by(department_id=dept_filter)
 
-    search=request.args.get('search')
-    role_filter = request.args.get('role')
-    dept_filter = request.args.get('department_id')
-
-    if search:
-        query = query.filter(User.username.ilike(f'%{search}%'))
-    if role_filter:
-        query = query.filter_by(role=role_filter)
-    if dept_filter:
-        query = query.filter_by(department_id=dept_filter)
-
-    users = query.all()
-    return render_template('users.html', users=users, departments=departments, search=search, role_filter=role_filter, dept_filter=dept_filter)
+   page = request.args.get('page', 1, type=int)
+   users_paginated = query.order_by(User.username).paginate(page=page, per_page=10)
+   return render_template('users.html', users=users_paginated.items, departments=departments, search=search, role_filter=role_filter, dept_filter=dept_filter, pagination=users_paginated)
 
 @users_bp.route('/users/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_user(id):
     if current_user.role != 'Admin':
-        flash('Only admins can edit users.')
-        return redirect(url_for('assets.manage_assets'))
+       flash('Only admins can edit users.')
+       return redirect(url_for('assets.manage_assets'))
     user = User.query.get_or_404(id)
     departments = Department.query.all()
 
     if request.method == 'POST':
         user.username = request.form['username']
+        user.full_name = request.form['full_name']
         user.password = request.form['password']
         user.role = request.form['role']
         user.department_id = request.form['department_id']
@@ -94,7 +81,7 @@ def edit_user(id):
 
 
 @users_bp.route('/users/delete/<int:id>', methods=['POST'])
-@login_required
+#@login_required
 def delete_user(id):
     if current_user.role != 'Admin':
         flash('Only admins can delete users.')
@@ -112,7 +99,7 @@ def delete_user(id):
     return redirect(url_for('users.manage_users'))
 
 @users_bp.route('/change-password', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def change_password():
     if request.method == 'POST':
         current = request.form['current_password']
