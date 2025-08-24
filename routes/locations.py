@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from extensions import db
 from models import Location
 
@@ -12,6 +12,7 @@ def manage_locations():
         new_loc = Location(name=name, description=description)
         db.session.add(new_loc)
         db.session.commit()
+        flash('Location added successfully.', 'success')
         return redirect(url_for('locations.manage_locations'))
 
     locations = Location.query.all()
@@ -24,6 +25,7 @@ def edit_location(id):
         location.name = request.form['name']
         location.description = request.form['description']
         db.session.commit()
+        flash('Location updated successfully.', 'success')
         return redirect(url_for('locations.manage_locations'))
 
     return render_template('edit_location.html', location=location)
@@ -33,4 +35,5 @@ def delete_location(id):
     location = Location.query.get_or_404(id)
     db.session.delete(location)
     db.session.commit()
+    flash('Location deleted successfully.', 'success')
     return redirect(url_for('locations.manage_locations'))
