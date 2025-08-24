@@ -1,35 +1,69 @@
-<h2>Edit Asset Assignment</h2>
-<form method="POST">
-    <label>Asset:</label><br>
-    <select name="asset_id">
-        {% for asset in assets %}
-            <option value="{{ asset.id }}" {% if asset.id == assignment.asset_id %}selected{% endif %}>
-                {{ asset.name }} ({{ asset.serial_number }})
-            </option>
-        {% endfor %}
-    </select><br>
+{% extends 'base.html' %}
 
-    <label>User:</label><br>
-    <select name="user_id">
-        {% for user in users %}
-            <option value="{{ user.id }}" {% if user.id == assignment.user_id %}selected{% endif %}>
-                {{ user.username }}
-            </option>
-        {% endfor %}
-    </select><br>
+{% block title %}Edit Asset Assignment{% endblock %}
 
-    <label>Date Assigned:</label><br>
-    <input type="date" name="date_assigned" value="{{ assignment.date_assigned }}"><br>
+{% block content %}
+<div class="p-4 sm:p-6 lg:p-8 bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
+        
+        
+        <div class="mb-6 text-center">
+            <h1 class="text-3xl font-bold text-gray-800">Edit Assignment</h1>
+            <p class="text-gray-600">Update the details for this asset assignment.</p>
+        </div>
 
-    <label>Return Date:</label><br>
-    <input type="date" name="return_date" value="{{ assignment.return_date }}"><br>
+        
+        <form method="POST" class="space-y-4">
+            <div>
+                <label for="asset_id" class="block text-sm font-medium text-gray-700">Asset:</label>
+                <select id="asset_id" name="asset_id" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    {% for asset in assets %}
+                        <option value="{{ asset.id }}" {% if asset.id == assignment.asset_id %}selected{% endif %}>
+                            {{ asset.name }} ({{ asset.serial_number }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
 
-    <label>Status:</label><br>
-    <select name="status">
-        <option {% if assignment.status == 'Active' %}selected{% endif %}>Active</option>
-        <option {% if assignment.status == 'Returned' %}selected{% endif %}>Returned</option>
-        <option {% if assignment.status == 'Lost' %}selected{% endif %}>Lost</option>
-    </select><br>
+            <div>
+                <label for="user_id" class="block text-sm font-medium text-gray-700">User:</label>
+                <select id="user_id" name="user_id" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    {% for user in users %}
+                        <option value="{{ user.id }}" {% if user.id == assignment.user_id %}selected{% endif %}>
+                            {{ user.username }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
 
-    <button type="submit">Update Assignment</button>
-</form>
+            <div>
+                <label for="date_assigned" class="block text-sm font-medium text-gray-700">Date Assigned:</label>
+                <input type="date" id="date_assigned" name="date_assigned" value="{{ assignment.date_assigned.strftime('%Y-%m-%d') if assignment.date_assigned }}" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <div>
+                <label for="return_date" class="block text-sm font-medium text-gray-700">Expected Return Date:</label>
+                <input type="date" id="return_date" name="return_date" value="{{ assignment.return_date.strftime('%Y-%m-%d') if assignment.return_date }}" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <div>
+                <label for="status" class="block text-sm font-medium text-gray-700">Status:</label>
+                <select id="status" name="status" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <option {% if assignment.status == 'Active' %}selected{% endif %}>Active</option>
+                    <option {% if assignment.status == 'Returned' %}selected{% endif %}>Returned</option>
+                    <option {% if assignment.status == 'Lost' %}selected{% endif %}>Lost</option>
+                </select>
+            </div>
+
+            <div class="flex items-center justify-between pt-4">
+                <a href="{{ url_for('assignments.manage_assignments') }}" class="w-auto px-6 py-2 text-center text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                    Cancel
+                </a>
+                <button type="submit" class="w-auto flex justify-center py-2 px-6 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Update Assignment
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

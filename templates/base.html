@@ -8,30 +8,40 @@
 </head>
 
 <body class="bg-gray-100 text-gray-800">
-    <nav class="bg-green-700 text-white px-6 py-4 flex justify-between items-center">
-         <div class="flex items-center space-x-3">
+    <nav class="bg-green-700 text-white px-6 py-4 flex justify-between items-center shadow">
+    <div class="flex items-center space-x-3">
         <img src="{{ url_for('static', filename='images/logo-240.png') }}" alt="County Logo" class="h-10 w-10 rounded-full">
         <span class="text-xl font-semibold">County AMS</span>
     </div>
 
-        <div class="space-x-4">
-            {% if current_user.is_authenticated and current_user.role == 'Admin' %}
+    <div class="space-x-4">
+        {% if current_user.is_authenticated %}
+            <a class="hover:underline" href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
+            <a class="hover:underline" href="{{ url_for('departments.manage_departments') }}">Departments</a>
+            <a class="hover:underline" href="{{ url_for('categories.manage_categories') }}">Categories</a>
+            <a class="hover:underline" href="{{ url_for('assets.manage_assets') }}">Assets</a>
+            {% if current_user.role == 'Admin' %}
+                    <a class="hover:underline" href="{{ url_for('assignments.manage_assignments') }}">Assignments</a>
+                {% endif %}
+            <a class="hover:underline" href="{{ url_for('locations.manage_locations') }}">Locations</a>
+            {% if current_user.role == 'Admin' %}
                 <a class="hover:underline" href="{{ url_for('users.manage_users') }}">Users</a>
             {% endif %}
-            {% if current_user.is_authenticated %}
-                <a class="hover:underline" href="{{ url_for('users.change_password') }}">Change Password</a>
-                <a class="hover:underline" href="{{ url_for('auth.logout') }}">Logout</a>
-            {% else %}
-                <a class="text-white hover:text-blue-800" href="{{ url_for('auth.login') }}">Login</a>
-            {% endif %}
-        </div>
-    </nav>
+            
+            <a class="hover:underline" href="{{ url_for('users.change_password') }}">Change Password</a>
+            <a class="hover:underline" href="{{ url_for('auth.logout') }}">Logout</a>
+        {% else %}
+            <a class="hover:underline" href="{{ url_for('auth.login') }}">Login</a>
+        {% endif %}
+    </div>
+</nav>
 
+    <!-- Flash Messages -->
     <main class="max-w-6xl mx-auto mt-8 px-4">
-        {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <div class="mb-4">
-                    {% for message in messages %}
+                    {% for category, message in messages %}
                         <div class="bg-blue-100 text-blue-800 px-4 py-2 rounded mb-2 shadow">{{ message }}</div>
                     {% endfor %}
                 </div>

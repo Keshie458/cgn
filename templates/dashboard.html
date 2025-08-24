@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Asset Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10 px-4">
+  <div class="bg-green-100 p-6 rounded shadow text-center">
+    <h3 class="text-lg font-semibold text-green-800">Total Assets</h3>
+    <p class="text-3xl font-bold mt-2">{{ summary.total }}</p>
+  </div>
+
+  <div class="bg-blue-100 p-6 rounded shadow text-center">
+    <h3 class="text-lg font-semibold text-blue-800">In Use</h3>
+    <p class="text-3xl font-bold mt-2">{{ summary.in_use }}</p>
+  </div>
+
+  <div class="bg-yellow-100 p-6 rounded shadow text-center">
+    <h3 class="text-lg font-semibold text-yellow-800">Under Repair</h3>
+    <p class="text-3xl font-bold mt-2">{{ summary.repair }}</p>
+  </div>
+
+  <div class="bg-red-100 p-6 rounded shadow text-center">
+    <h3 class="text-lg font-semibold text-red-800">Disposed</h3>
+    <p class="text-3xl font-bold mt-2">{{ summary.disposed }}</p>
+  </div>
+
+  <div class="bg-purple-100 p-6 rounded shadow text-center">
+    <h3 class="text-lg font-semibold text-purple-800">Warranty Expiring Soon</h3>
+    <p class="text-3xl font-bold mt-2">{{ summary.warranty_expiring }}</p>
+  </div>
+</div>
+
+{% endblock %}

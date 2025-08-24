@@ -1,32 +1,68 @@
-<h2>Edit Maintenance Log</h2>
-<form method="POST">
-    <label>Asset:</label><br>
-    <select name="asset_id">
-        {% for asset in assets %}
-            <option value="{{ asset.id }}" {% if asset.id == log.asset_id %}selected{% endif %}>
-                {{ asset.name }} ({{ asset.serial_number }})
-            </option>
-        {% endfor %}
-    </select><br>
+{% extends 'base.html' %}
 
-    <label>Date:</label><br>
-    <input type="date" name="date" value="{{ log.date }}"><br>
+{% block title %}Edit Maintenance Log{% endblock %}
 
-    <label>Description:</label><br>
-    <textarea name="description">{{ log.description }}</textarea><br>
+{% block content %}
+<div class="p-4 sm:p-6 lg:p-8 bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
+        
+        <!-- Page Header -->
+        <div class="mb-6 text-center">
+            <h1 class="text-3xl font-bold text-gray-800">Edit Maintenance Log</h1>
+            <p class="text-gray-600">Update the details for this maintenance record.</p>
+        </div>
 
-    <label>Cost:</label><br>
-    <input type="number" step="0.01" name="cost" value="{{ log.cost }}"><br>
+        <!-- Edit Maintenance Log Form -->
+        <form method="POST" class="space-y-4">
+            <div>
+                <label for="asset_id" class="block text-sm font-medium text-gray-700">Asset:</label>
+                <select id="asset_id" name="asset_id" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    {% for asset in assets %}
+                        <option value="{{ asset.id }}" {% if asset.id == log.asset_id %}selected{% endif %}>
+                            {{ asset.name }} ({{ asset.serial_number }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
 
-    <label>Service Provider:</label><br>
-    <input type="text" name="service_provider" value="{{ log.service_provider }}"><br>
+            <div>
+                <label for="date" class="block text-sm font-medium text-gray-700">Date:</label>
+                <input type="date" id="date" name="date" value="{{ log.date.strftime('%Y-%m-%d') if log.date }}" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
 
-    <label>Status:</label><br>
-    <select name="status">
-        <option {% if log.status == 'Scheduled' %}selected{% endif %}>Scheduled</option>
-        <option {% if log.status == 'Completed' %}selected{% endif %}>Completed</option>
-        <option {% if log.status == 'Pending' %}selected{% endif %}>Pending</option>
-    </select><br>
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700">Description:</label>
+                <textarea id="description" name="description" rows="3" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">{{ log.description }}</textarea>
+            </div>
 
-    <button type="submit">Update Log</button>
-</form>
+            <div>
+                <label for="cost" class="block text-sm font-medium text-gray-700">Cost:</label>
+                <input type="number" id="cost" name="cost" step="0.01" value="{{ log.cost }}" placeholder="0.00" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <div>
+                <label for="service_provider" class="block text-sm font-medium text-gray-700">Service Provider:</label>
+                <input type="text" id="service_provider" name="service_provider" value="{{ log.service_provider }}" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <div>
+                <label for="status" class="block text-sm font-medium text-gray-700">Status:</label>
+                <select id="status" name="status" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <option {% if log.status == 'Scheduled' %}selected{% endif %}>Scheduled</option>
+                    <option {% if log.status == 'Completed' %}selected{% endif %}>Completed</option>
+                    <option {% if log.status == 'Pending' %}selected{% endif %}>Pending</option>
+                </select>
+            </div>
+
+            <div class="flex items-center justify-between pt-4">
+                <a href="{{ url_for('maintenance.manage_maintenance') }}" class="w-auto px-6 py-2 text-center text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                    Cancel
+                </a>
+                <button type="submit" class="w-auto flex justify-center py-2 px-6 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Update Log
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

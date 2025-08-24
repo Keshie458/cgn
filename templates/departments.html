@@ -1,41 +1,48 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Departments</title>
-</head>
-<body>
-    <h2>Add Department</h2>
-    <form method="POST">
-        <label>Name:</label><br>
-        <input type="text" name="name" required><br>
-        <label>Description:</label><br>
-        <textarea name="description"></textarea><br>
-        <button type="submit">Add Department</button>
-    </form>
-    <form method="GET">
-        <input type="text" name="search" placeholder="Search departments..." value="{{ search_query }}">
-        <button type="submit">Search</button>
+{% extends 'base.html' %}
+
+{% block title %}Departments{% endblock %}
+
+{% block content %}
+    <h2 class="text-2xl font-semibold mb-4">Add Department</h2>
+    <form method="POST" class="bg-white p-4 rounded shadow mb-6">
+        <label class="block mb-2 font-medium">Name:</label>
+        <input type="text" name="name" required class="w-full border p-2 mb-4 rounded">
+
+        <label class="block mb-2 font-medium">Description:</label>
+        <textarea name="description" class="w-full border p-2 mb-4 rounded"></textarea>
+
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Add Department</button>
     </form>
 
-    <h3>Existing Departments</h3>
-    <a href="/departments/export/csv">📥 Export as CSV</a>
-    <table border="1">
-        <tr>
-            <th>Name</th>
-            <th>Description</th>
-        </tr>
-        {% for dept in departments %}
-        <tr>
-            <td>{{ dept.name }}</td>
-            <td>{{ dept.description }}</td>
-            <td>
-    <form action="/departments/delete/{{ dept.id }}" method="POST" style="display:inline;">
-        <button type="submit">Delete</button>
+    <form method="GET" class="mb-6">
+        <input type="text" name="search" placeholder="Search departments..." value="{{ search_query }}" class="border p-2 rounded w-2/3">
+        <button type="submit" class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800">Search</button>
     </form>
-    <a href="/departments/edit/{{ dept.id }}">Edit</a>
-</td>
-        </tr>
-        {% endfor %}
+
+    <h3 class="text-xl font-semibold mb-2">Existing Departments</h3>
+    <a href="/departments/export/csv" class="text-blue-600 hover:underline mb-4 inline-block">📥 Export as CSV</a>
+
+    <table class="table-auto w-full bg-white rounded shadow">
+        <thead class="bg-gray-200">
+            <tr>
+                <th class="px-4 py-2 text-left">Name</th>
+                <th class="px-4 py-2 text-left">Description</th>
+                <th class="px-4 py-2 text-left">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dept in departments %}
+            <tr class="border-t">
+                <td class="px-4 py-2">{{ dept.name }}</td>
+                <td class="px-4 py-2">{{ dept.description }}</td>
+                <td class="px-4 py-2">
+                    <form action="/departments/delete/{{ dept.id }}" method="POST" style="display:inline;">
+                        <button type="submit" class="text-red-600 hover:underline">Delete</button>
+                    </form>
+                    <a href="/departments/edit/{{ dept.id }}" class="ml-2 text-blue-600 hover:underline">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
-</body>
-</html>
+{% endblock %}
