@@ -6,9 +6,11 @@ from datetime import datetime
 from utils.audit import log_action
 from flask_login import current_user, login_required
 
+
 assets_bp = Blueprint('assets', __name__)
 
 @assets_bp.route('/assets', methods=['GET', 'POST'])
+# @login_required
 def manage_assets():
     categories = AssetCategory.query.all()
     locations = Location.query.all()
@@ -100,6 +102,7 @@ def dispose_asset(id):
         flash('You do not have permission to dispose of assets.', 'danger')
         return redirect(url_for('assets.manage_assets'))
     asset = Asset.query.get_or_404(id)
+    
 
     if request.method == 'POST':
         asset.disposal_date = datetime.strptime(request.form['disposal_date'], '%Y-%m-%d')
@@ -108,6 +111,7 @@ def dispose_asset(id):
         asset.is_disposed = True
         asset.status = 'Disposed'
         db.session.commit()
+        flash('Asset disposed successfully!', 'success')
         log_action('Disposed asset', target_type='Asset', target_id=asset.id)
         return redirect(url_for('assets.manage_assets'))
 

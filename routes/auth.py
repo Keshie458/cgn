@@ -5,13 +5,16 @@ from werkzeug.security import check_password_hash
 
 auth_bp = Blueprint('auth', __name__)
 
+@auth_bp.route('/')
+def home():
+    return render_template('index.html')
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         user = User.query.filter_by(username=request.form['username']).first()
         if user and check_password_hash(user.password, request.form['password']):
             login_user(user)
-            return redirect(url_for('assets.manage_assets'))
+            return redirect(url_for('dashboard.dashboard'))
         flash('Invalid username or password')
     return render_template('login.html')
 
