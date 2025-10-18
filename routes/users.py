@@ -1,9 +1,9 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
 from flask_login import current_user, login_required
 from werkzeug.security import generate_password_hash
 from utils.audit import log_action
 from extensions import db
-from models import User, Department
+from models import AssetAssignment, User, Department, Asset
 
 users_bp = Blueprint('users', __name__)
 @users_bp.route('/users/create', methods=['GET', 'POST'])
@@ -122,3 +122,13 @@ def change_password():
         return redirect(url_for('assets.manage_assets'))
 
     return render_template('change_password.html')
+@users_bp.route('/<int:user_id>/assets')
+@login_required
+def user_assets(user_id):
+    user = User.query.get_or_404(user_id)
+   
+    if current_user.role == 'staff' and current_user.id != user_id:
+        abort(403)
+
+    assets = Asset.query.join(AssetAssignment).filter(AssetAssignment.user_id == user_id).all()
+    return render_template('user_assets.html', user=user, assets=assets)

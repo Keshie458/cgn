@@ -12,7 +12,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(150), nullable=False, unique=True)
     password = db.Column(db.String(255), nullable=False)
     role = db.Column(db.String(50), nullable=False)  
-
+    full_name = db.Column(db.String(120), nullable=False, server_default="Default Name")
     department_id= db.Column(db.Integer, db.ForeignKey('department.id'))
     department = db.relationship('Department', backref='users')
 
@@ -44,7 +44,10 @@ class Asset(db.Model):
     is_disposed = db.Column(db.Boolean, default=False)
     purchase_cost = db.Column(db.Float)
     salvage_value = db.Column(db.Float)
-    useful_life = db.Column(db.Integer)  # in years
+    useful_life = db.Column(db.Integer)  
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    owner = db.relationship('User', backref='assets')
+
 
 
 

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from extensions import db
 from models import AssetAssignment, Asset, User, Department
 from datetime import datetime
@@ -22,6 +22,7 @@ def manage_assignments():
         )
         db.session.add(assignment)
         db.session.commit()
+        flash('Asset assignment created successfully!', 'success')
         return redirect(url_for('assignments.manage_assignments'))
 
     department_id = request.args.get('department_id')
@@ -38,7 +39,9 @@ def manage_assignments():
     assets = Asset.query.all()
     users = User.query.all()
     return render_template('assignments.html', assignments=assignments, assets=assets, users=users, departments=departments, selected_dpt=department_id, selected_status=status)
+
 @assignments_bp.route('/assignments/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
 def edit_assignment(id):
     assignment = AssetAssignment.query.get_or_404(id)
     assets = Asset.query.all()
@@ -53,14 +56,17 @@ def edit_assignment(id):
         assignment.status = request.form['status']
 
         db.session.commit()
+        flash('Asset assignment updated successfully!', 'success')
         return redirect(url_for('assignments.manage_assignments'))
 
     return render_template('edit_assignment.html', assignment=assignment, assets=assets, users=users)
 
 
 @assignments_bp.route('/assignments/delete/<int:id>', methods=['POST'])
+@login_required
 def delete_assignment(id):
     assignment = AssetAssignment.query.get_or_404(id)
     db.session.delete(assignment)
     db.session.commit()
+    flash('Asset assignment deleted successfully!', 'success')
     return redirect(url_for('assignments.manage_assignments'))

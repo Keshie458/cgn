@@ -1,0 +1,15 @@
+{
+  "Jinja Template with Base": {
+    "prefix": "jinja-base",
+    "body": [
+      "{% extends 'base.html' %}",
+      "",
+      "{% block title %}${1:Page Title}{% endblock %}",
+      "",
+      "{% block content %}",
+      "  ${2:<!-- Your content here -->}",
+      "{% endblock %}"
+    ],
+    "description": "Jinja template extending base.html"
+}
+}

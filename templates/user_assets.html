@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-6">
+  <h1 class="text-2xl font-semibold text-gray-800 mb-4">
+    Assets Owned by {{ user.full_name }}
+  </h1>
+<div class="bg-gray-100 p-4 rounded mb-6">
+  <p><strong>Role:</strong> {{ user.role }}</p>
+  <p><strong>Department:</strong> {{ user.department.name }}</p>
+</div>
+
+<table class="min-w-full bg-white shadow rounded overflow-hidden">
+  <thead class="bg-gray-200 text-gray-700">
+    <tr>
+      <th class="px-4 py-2 text-left">Asset Name</th>
+      <th class="px-4 py-2 text-left">Category</th>
+      <th class="px-4 py-2 text-left">Status</th>
+      <th class="px-4 py-2 text-left">Location</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for asset in assets %}
+    <tr class="border-b hover:bg-gray-50">
+      <td class="px-4 py-2">{{ asset.name }}</td>
+      <td class="px-4 py-2">{{ asset.category.name }}</td>
+      <td class="px-4 py-2">{{ asset.status }}</td>
+      <td class="px-4 py-2">{{ asset.location.name }}</td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="4" class="px-4 py-4 text-center text-gray-500">
+        No assets assigned to this user.
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<div class="mt-6">
+  <a href="{{ url_for('users.manage_users') }}" class="text-blue-600 hover:underline">
+    ← Back to Users
+  </a>
+</div>
+{% endblock %}
